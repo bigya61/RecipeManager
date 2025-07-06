@@ -1,520 +1,988 @@
-
+//package app.ui;
+//import app.ui.RecipeDAO;
+//import javax.swing.*;
+//import javax.swing.border.EmptyBorder;
+//import java.awt.*;
+//import java.awt.event.*;
+//import java.net.URL;
+//import java.util.Arrays;
+//import java.util.ArrayList;
+//import app.ui.RecipeData;
+//import java.util.List;
+//import java.util.function.Consumer;
+//import java.sql.SQLException;
+//
+//public class RecipeLandingPage extends JFrame {
+//    private static final long serialVersionUID = 1L;
+//
+//    private String currentUserName = null;
+//    private JPanel contentPane;
+//    private JPanel cardsPanel;
+//    private JTextField searchField;
+//    private JButton loginButton, signUpButton;
+//
+//    private static final int CARD_WIDTH = 270;
+//    private static final int CARD_GAP = 15;
+//
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> {
+//            RecipeLandingPage frame = new RecipeLandingPage();
+//            frame.setVisible(true);
+//            frame.adjustCardLayout();
+//            frame.loadAndDisplayRecipes();
+//        });
+//    }
+//    private void performSearch() {
+//        String keyword = searchField.getText().trim();
+//        if (keyword.isEmpty() || keyword.equals("Search for recipes...")) {
+//            JOptionPane.showMessageDialog(this, "Please enter a keyword to search.", "Warning", JOptionPane.WARNING_MESSAGE);
+//            return;
+//        }
+//
+//        // Open the search results page and pass the keyword and currentUserName
+//        SearchResultsPage resultsPage = new SearchResultsPage(keyword, currentUserName);
+//        resultsPage.setVisible(true);
+//    }
+//
+//    public RecipeLandingPage() {
+//        setTitle("Recipe Management System");
+//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//        // Responsive sizing
+//        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+//        setPreferredSize(new Dimension((int)(screen.width*0.9), (int)(screen.height*0.85)));
+//        setMinimumSize(new Dimension(1000, 650));
+//        setLocationRelativeTo(null);
+//        setResizable(true);
+//
+//        contentPane = new JPanel(new BorderLayout());
+//        contentPane.setBorder(new EmptyBorder(5,5,5,5));
+//        setContentPane(contentPane);
+//
+//        // Build UI sections
+//        contentPane.add(buildNavBar(), BorderLayout.NORTH);
+//        contentPane.add(buildMainScroll(), BorderLayout.CENTER);
+//        contentPane.add(buildFooter(), BorderLayout.SOUTH);
+//
+//        pack();
+//    }
+//    private void performSearch(String query) {
+//        new SwingWorker<List<RecipeData>, Void>() {
+//            protected List<RecipeData> doInBackground() throws Exception {
+//                return RecipeDAO.searchRecipes(query);
+//            }
+//
+//            protected void done() {
+//                try {
+//                    List<RecipeData> results = get();
+////                    new SearchResultsPage(results, query ,currentUserName);  // ⬅️ launch new page
+//                    SearchResultsPage page = new SearchResultsPage(query, currentUserName);
+//                    page.setVisible(true);
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    JOptionPane.showMessageDialog(RecipeLandingPage.this,
+//                        "An error occurred during search.",
+//                        "Search Error", JOptionPane.ERROR_MESSAGE);
+//                }
+//            }
+//        }.execute();
+//    }
+//    
+//
+////    private JPanel buildNavBar() {
+////        JPanel navBar = new JPanel(new FlowLayout(FlowLayout.LEFT,20,10));
+////        navBar.setBackground(Color.WHITE);
+////        navBar.setBorder(BorderFactory.createMatteBorder(0,0,1,0,Color.LIGHT_GRAY));
+////
+////        JLabel logo = new JLabel("RecipeHub");
+////        logo.setFont(new Font("Arial",Font.BOLD,24));
+////        logo.setForeground(new Color(234,88,12));
+////        navBar.add(logo);
+////
+////        searchField = new JTextField("Search for recipes...",30);
+////        searchField.setFont(new Font("Arial",Font.PLAIN,14));
+////        searchField.setForeground(Color.GRAY);
+////        searchField.addFocusListener(new FocusAdapter() {
+////            public void focusGained(FocusEvent e) {
+////                if (searchField.getText().equals("Search for recipes...")) {
+////                    searchField.setText("");
+////                    searchField.setForeground(Color.BLACK);
+////                }
+////            }
+////            public void focusLost(FocusEvent e) {
+////                if (searchField.getText().isEmpty()) {
+////                    searchField.setText("Search for recipes...");
+////                    searchField.setForeground(Color.GRAY);
+////                }
+////            }
+////        });
+////        navBar.add(searchField);
+//    
+////    private JPanel buildNavBar() {
+////        JPanel navBar = new JPanel(new FlowLayout(FlowLayout.LEFT,20,10));
+////        navBar.setBackground(Color.WHITE);
+////        navBar.setBorder(BorderFactory.createMatteBorder(0,0,1,0,Color.LIGHT_GRAY));
+////
+////        JLabel logo = new JLabel("RecipeHub");
+////        logo.setFont(new Font("Arial",Font.BOLD,24));
+////        logo.setForeground(new Color(234,88,12));
+////        navBar.add(logo);
+////
+////        searchField = new JTextField("Search for recipes...",30);
+////        searchField.setFont(new Font("Arial",Font.PLAIN,14));
+////        searchField.setForeground(Color.GRAY);
+////        searchField.addFocusListener(new FocusAdapter() {
+////            public void focusGained(FocusEvent e) {
+////                if (searchField.getText().equals("Search for recipes...")) {
+////                    searchField.setText("");
+////                    searchField.setForeground(Color.BLACK);
+////                }
+////            }
+////            public void focusLost(FocusEvent e) {
+////                if (searchField.getText().isEmpty()) {
+////                    searchField.setText("Search for recipes...");
+////                    searchField.setForeground(Color.GRAY);
+////                }
+////            }
+////        });
+////
+////        // Add action listener for pressing Enter key in search field
+////        searchField.addActionListener(e -> performSearch());
+////
+////        navBar.add(searchField);
+////
+////        JButton searchBtn = new JButton("Search");
+////        styleButton(searchBtn, new Color(234,88,12), Color.WHITE);
+////        searchBtn.addActionListener(e -> performSearch());
+////        navBar.add(searchBtn);
+////
+////        // ... existing loginButton, signUpButton logic here
+////        // (no changes to user login buttons)
+////
+////        
+////
+////
+////        // Login / User button
+////        loginButton = new JButton("Login");
+////        styleButton(loginButton, Color.WHITE, new Color(234,88,12));
+////        loginButton.addActionListener(e -> openLogin());
+////        signUpButton = new JButton("Sign Up");
+////        styleButton(signUpButton, new Color(234,88,12), Color.WHITE);
+////        signUpButton.addActionListener(e -> openLogin());
+////
+////        if (currentUserName == null) {
+////            navBar.add(loginButton);
+////            navBar.add(signUpButton);
+////        } else {
+////            JButton userBtn = new JButton(currentUserName + " \u25BE");
+////            styleButton(userBtn, Color.WHITE, new Color(234,88,12));
+////            JPopupMenu menu = new JPopupMenu();
+////            JMenuItem logout = new JMenuItem("Log Out");
+////            logout.addActionListener(ev -> {
+////                currentUserName = null;
+////                rebuildNavBar();
+////            });
+////            menu.add(logout);
+////            userBtn.addActionListener(ev -> menu.show(userBtn,0,userBtn.getHeight()));
+////            navBar.add(userBtn);
+////        }
+////
+////        return navBar;
+////    }
+//    private JPanel buildNavBar() {
+//        JPanel navBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
+//        navBar.setBackground(Color.WHITE);
+//        navBar.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
+//
+//        // Logo
+//        JLabel logo = new JLabel("RecipeHub");
+//        logo.setFont(new Font("Arial", Font.BOLD, 24));
+//        logo.setForeground(new Color(234, 88, 12));
+//        navBar.add(logo);
+//
+//        // Search icon
+//        JLabel searchIcon = new JLabel("\uD83D\uDD0D"); // Unicode for magnifying glass
+//        searchIcon.setFont(new Font("Arial", Font.PLAIN, 18));
+//        navBar.add(searchIcon);
+//
+//        // Search text field
+//        searchField = new JTextField("Search for recipes...", 30);
+//        searchField.setFont(new Font("Arial", Font.PLAIN, 14));
+//        searchField.setForeground(Color.GRAY);
+//        searchField.addFocusListener(new FocusAdapter() {
+//            public void focusGained(FocusEvent e) {
+//                if (searchField.getText().equals("Search for recipes...")) {
+//                    searchField.setText("");
+//                    searchField.setForeground(Color.BLACK);
+//                }
+//            }
+//
+//            public void focusLost(FocusEvent e) {
+//                if (searchField.getText().isEmpty()) {
+//                    searchField.setText("Search for recipes...");
+//                    searchField.setForeground(Color.GRAY);
+//                }
+//            }
+//        });
+//
+//        // Handle Enter key
+//        searchField.addActionListener(e -> performSearch());
+//
+//        navBar.add(searchField);
+//
+//        // Search button
+//        JButton searchBtn = new JButton("Search");
+//        styleButton(searchBtn, new Color(234, 88, 12), Color.WHITE);
+//        searchBtn.addActionListener(e -> performSearch());
+//        navBar.add(searchBtn);
+//
+//        // Login and SignUp buttons
+//        loginButton = new JButton("Login");
+//        styleButton(loginButton, Color.WHITE, new Color(234, 88, 12));
+//        loginButton.addActionListener(e -> openLogin());
+//
+//        signUpButton = new JButton("Sign Up");
+//        styleButton(signUpButton, new Color(234, 88, 12), Color.WHITE);
+//        signUpButton.addActionListener(e -> openLogin());
+//
+//        if (currentUserName == null) {
+//            navBar.add(loginButton);
+//            navBar.add(signUpButton);
+//        } else {
+//            JButton userBtn = new JButton(currentUserName + " \u25BE"); // ▼ symbol
+//            styleButton(userBtn, Color.WHITE, new Color(234, 88, 12));
+//
+//            JPopupMenu menu = new JPopupMenu();
+//            JMenuItem logout = new JMenuItem("Log Out");
+//            logout.addActionListener(ev -> {
+//                currentUserName = null;
+//                rebuildNavBar(); // Rebuild with login/signup again
+//            });
+//            menu.add(logout);
+//
+//            userBtn.addActionListener(ev -> menu.show(userBtn, 0, userBtn.getHeight()));
+//            navBar.add(userBtn);
+//        }
+//
+//        return navBar;
+//    }
+//
+//    private void rebuildNavBar() {
+//        contentPane.remove(((BorderLayout)contentPane.getLayout()).getLayoutComponent(BorderLayout.NORTH));
+//        contentPane.add(buildNavBar(), BorderLayout.NORTH);
+//        contentPane.revalidate();
+//        contentPane.repaint();
+//    }
+//
+//    private void openLogin() {
+//        LoginPage lp = new LoginPage(name -> {
+//            currentUserName = name;
+//            rebuildNavBar();
+//        });
+//        lp.setVisible(true);
+//    }
+//    private void setCurrentUserName(String name) {
+//        this.currentUserName = name;
+//        rebuildNavBar();  // Optional: Update the top bar after login
+//    }
+//
+//    private JScrollPane buildMainScroll() {
+//        JScrollPane scroll = new JScrollPane();
+//        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+//        scroll.getVerticalScrollBar().setUnitIncrement(16);
+//
+//        JPanel main = new JPanel();
+//        main.setLayout(new BoxLayout(main,BoxLayout.Y_AXIS));
+//        main.setBackground(new Color(248,250,252));
+//        scroll.setViewportView(main);
+//
+//        // Hero Section
+//        JPanel hero = new JPanel(new BorderLayout(0,15));
+//        hero.setBackground(new Color(255,237,213));
+//        hero.setBorder(new EmptyBorder(30,20,30,20));
+//        main.add(hero);
+//        main.add(Box.createVerticalStrut(20));
+//
+//        JLabel heroTitle = new JLabel("Discover Delicious Recipes",SwingConstants.CENTER);
+//        heroTitle.setFont(new Font("Arial",Font.BOLD,36));
+//        heroTitle.setForeground(new Color(153,27,27));
+//        hero.add(heroTitle,BorderLayout.NORTH);
+//
+//        JTextArea heroDesc = new JTextArea("Discover, manage, and preserve authentic Nepali recipes!");
+//        heroDesc.setFont(new Font("Arial",Font.PLAIN,16));
+//        heroDesc.setWrapStyleWord(true);
+//        heroDesc.setLineWrap(true);
+//        heroDesc.setOpaque(false);
+//        heroDesc.setEditable(false);
+//        hero.add(heroDesc,BorderLayout.CENTER);
+//
+//        JButton browse = new JButton("Browse Recipes");
+//        styleButton(browse,new Color(234,88,12),Color.WHITE);
+//        browse.setFont(new Font("Arial",Font.BOLD,18));
+//        hero.add(browse,BorderLayout.SOUTH);
+//
+//        // Section Title
+//        JLabel title = new JLabel("Traditional Nepalese Recipes",SwingConstants.CENTER);
+//        title.setFont(new Font("Arial",Font.BOLD,28));
+//        title.setForeground(new Color(51,51,51));
+//        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+//        main.add(title);
+//        main.add(Box.createVerticalStrut(20));
+//
+//        // Cards Container
+//        JPanel cardsWrapper = new JPanel();
+//        cardsWrapper.setLayout(new BoxLayout(cardsWrapper,BoxLayout.X_AXIS));
+//        cardsWrapper.setBackground(new Color(248,250,252));
+//        main.add(cardsWrapper);
+//        cardsWrapper.add(Box.createHorizontalGlue());
+//
+//        cardsPanel = new JPanel(new GridLayout(0,1,CARD_GAP,CARD_GAP)); 
+//        //TAGGED FOR HORIZONTAL LAYOUT 
+//       
+////        cardsPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, CARD_GAP, CARD_GAP));// maintains the webpage size
+//        cardsPanel.setBorder(new EmptyBorder(10,10,10,10));
+//        cardsPanel.setBackground(new Color(248,250,252));
+//        cardsPanel.setMaximumSize(new Dimension(1000,Integer.MAX_VALUE));
+//        cardsWrapper.add(cardsPanel);
+//
+//        cardsWrapper.add(Box.createHorizontalGlue());
+//        main.add(Box.createVerticalStrut(30));
+//
+//        main.addComponentListener(new ComponentAdapter() {
+//            public void componentResized(ComponentEvent e) {
+//                adjustCardLayout();
+//            }
+//        });
+//
+//        // Add Recipe Section
+//        JPanel addPanel = new JPanel();
+//        addPanel.setLayout(new BoxLayout(addPanel,BoxLayout.Y_AXIS));
+//        addPanel.setBackground(new Color(255,247,237));
+//        addPanel.setBorder(new EmptyBorder(30,20,30,20));
+//        main.add(addPanel);
+//        main.add(Box.createVerticalStrut(20));
+//
+//        JLabel addTitle = new JLabel("Didn't find what you were looking for?",SwingConstants.CENTER);
+//        addTitle.setFont(new Font("Arial",Font.BOLD,28));
+//        addTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+//        addPanel.add(addTitle);
+//        addPanel.add(Box.createVerticalStrut(10));
+//
+//        JTextArea addDesc = new JTextArea("Help us grow our collection by adding your own unique recipes!");
+//        addDesc.setFont(new Font("Arial",Font.PLAIN,16));
+//        addDesc.setWrapStyleWord(true);
+//        addDesc.setLineWrap(true);
+//        addDesc.setOpaque(false);
+//        addDesc.setEditable(false);
+//        addDesc.setBorder(null);
+//        addDesc.setAlignmentX(Component.CENTER_ALIGNMENT);
+//        addDesc.setMaximumSize(new Dimension(800,40));
+//        addPanel.add(addDesc);
+//        addPanel.add(Box.createVerticalStrut(20));
+//
+//
+//        JButton addBtn = new JButton("Add New Recipe");
+//        styleButton(addBtn, new Color(234, 88, 12), Color.BLACK);
+//        addBtn.setFont(new Font("Arial", Font.BOLD, 20));
+//        addBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+//
+//        // 👉 Connect to AddRecipePage
+//        addBtn.addActionListener(e -> {
+//            if (currentUserName != null) {
+//                // User is logged in
+//                new AddRecipePage().setVisible(true);
+//            } else {
+//                // User not logged in → redirect to login
+//                LoginPage lp = new LoginPage(fullName -> {
+//                    setCurrentUserName(fullName);
+//                    SwingUtilities.invokeLater(() -> this.setVisible(true));
+//                });
+//                lp.setVisible(true);
+//                this.setVisible(false);
+//            }
+//        });
+//
+//        addPanel.add(addBtn);
+//
+//        return scroll;
+//    }
+//
+//    private JPanel buildFooter() {
+//        JPanel footer = new JPanel(new FlowLayout(FlowLayout.CENTER,20,10));
+//        footer.setBackground(new Color(51,51,51));
+//
+//        JLabel copy = new JLabel("© 2024 RecipeHub. All rights reserved.");
+//        copy.setForeground(Color.WHITE);
+//        copy.setFont(new Font("Arial",Font.PLAIN,12));
+//        footer.add(copy);
+//
+//        for (String text : Arrays.asList("Privacy Policy","Terms of Service","Contact Us")) {
+//            JButton link = new JButton(text);
+//            styleLinkButton(link);
+//            footer.add(link);
+//        }
+//        return footer;
+//    }
+//
+//    private void adjustCardLayout() {
+//        int w = cardsPanel.getWidth(); if (w<=0) return;
+//        int cols = Math.max(1, w/CARD_WIDTH);
+//        GridLayout g = (GridLayout)cardsPanel.getLayout();
+//        if (g.getColumns()!=cols) {
+//            g.setColumns(cols);
+//            cardsPanel.revalidate();
+//        }
+//    }
+//
+////    private List<RecipeData> fetchRecipes() {
+////        return Arrays.asList(
+//////            new RecipeData("Dal, Bhat, Tarkari","A soul-warming staple of lentils, rice, and veggies.","https://placehold.co/400x400/FDBA74/FFFFFF?text=Dal+Bhat+Tarkari"),
+//////            new RecipeData("Sel Roti","Ring-shaped sweet rice bread, deep-fried to perfection.","https://placehold.co/400x400/6EE7B7/FFFFFF?text=Sel+Roti"),
+//////            new RecipeData("Momo","Steamed dumplings filled with meat or veggies.","https://placehold.co/400x400/F0ABFC/FFFFFF?text=Momo"),
+//////            new RecipeData("Yomari","Rice-flour dumplings with sweet molasses filling.","https://placehold.co/400x400/A5B4FC/FFFFFF?text=Yomari")
+////        );
+////    }
+//    private List<RecipeData> fetchRecipes() {
+//        try {
+//            return RecipeDAO.getTopRecipes(6);  // fetch max 6 recipes
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return new ArrayList<>(); // return empty if error
+//        }
+//    }
+//
+//    private void loadAndDisplayRecipes() {
+//        cardsPanel.removeAll();
+//        JLabel loading = new JLabel("Loading recipes...",SwingConstants.CENTER);
+//        loading.setFont(new Font("Arial",Font.ITALIC,16));
+//        loading.setForeground(Color.GRAY);
+//        cardsPanel.add(loading);
+//
+//        new SwingWorker<List<RecipeData>,Void>() {
+//            protected List<RecipeData> doInBackground() throws Exception {
+//                Thread.sleep(500);
+//                return fetchRecipes();
+//            }
+//            protected void done() {
+//                try {
+//                    cardsPanel.removeAll();
+//                    for (RecipeData r : get()) addRecipeCard(r);
+//                    adjustCardLayout();
+//                } catch (Exception e) {
+//                    cardsPanel.removeAll();
+//                    cardsPanel.add(new JLabel("Failed to load recipes.",SwingConstants.CENTER));
+//                }
+//            }
+//        }.execute();
+//    }
+//
+//    private void addRecipeCard(RecipeData r) {
+//        JPanel card = new JPanel(new BorderLayout());
+//        card.setBackground(Color.WHITE);
+//        card.setBorder(BorderFactory.createCompoundBorder(
+//            BorderFactory.createLineBorder(Color.LIGHT_GRAY,1),
+//            new EmptyBorder(5,5,5,5)
+//        ));
+//        card.setPreferredSize(new Dimension(250,320));
+//
+//        try {
+//            ImageIcon raw = new ImageIcon(new URL(r.imageUrl));
+//            Image scaled = raw.getImage().getScaledInstance(240,240,Image.SCALE_SMOOTH);
+//            card.add(new JLabel(new ImageIcon(scaled)),BorderLayout.NORTH);
+//        } catch (Exception ex) {
+//            JLabel img = new JLabel("Image",SwingConstants.CENTER);
+//            img.setPreferredSize(new Dimension(240,240));
+//            card.add(img,BorderLayout.NORTH);
+//        }
+//
+//        JPanel info = new JPanel();
+//        info.setLayout(new BoxLayout(info,BoxLayout.Y_AXIS));
+//        info.setBackground(Color.WHITE);
+//        info.setBorder(new EmptyBorder(5,5,5,5));
+//
+//        JLabel t = new JLabel(r.title);
+//        t.setFont(new Font("Arial",Font.BOLD,14));
+//        info.add(t);
+//
+//        JTextArea d = new JTextArea(r.description);
+//        d.setFont(new Font("Arial",Font.PLAIN,12));
+//        d.setWrapStyleWord(true); d.setLineWrap(true);
+//        d.setEditable(false); d.setOpaque(false);
+//        info.add(d);
+//
+//        JButton more = new JButton("Read More →");
+//        more.setFont(new Font("Arial",Font.PLAIN,12));
+//        more.setForeground(new Color(234,88,12));
+//        more.setContentAreaFilled(false); more.setBorderPainted(false);
+//        more.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+//        more.setAlignmentX(Component.LEFT_ALIGNMENT);
+//        more.addActionListener(e -> new RecipeDescriptionPage(
+//        	    r.title,
+//        	    r.description,
+//        	    r.imageUrl,
+//        	    r.ingredients,
+//        	    r.cookTime
+//        	).setVisible(true));
+//
+//        more.addActionListener(e -> new RecipeDescriptionPage(
+//        	    r.title,
+//        	    r.description,
+//        	    r.imageUrl,
+//        	    r.ingredients != null ? r.ingredients : List.of("N/A"),
+//        	    r.cookTime != null ? r.cookTime : "Unknown"
+//        	).setVisible(true));
+//        
+//        info.add(Box.createVerticalStrut(5));
+//        info.add(more);
+//
+//        card.add(info,BorderLayout.CENTER);
+//        cardsPanel.add(card);
+//    }
+//
+//    private void styleButton(JButton b, Color bg, Color fg) {
+//        b.setBackground(bg); b.setForeground(fg);
+//        b.setFocusPainted(false);
+//        b.setBorder(BorderFactory.createEmptyBorder(10,20,10,20));
+//        b.setFont(new Font("Arial",Font.BOLD,14));
+//        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+//    }
+//
+//    private void styleLinkButton(JButton b) {
+//        b.setBackground(null); b.setForeground(Color.WHITE);
+//        b.setFocusPainted(false); b.setBorderPainted(false);
+//        b.setContentAreaFilled(false); b.setFont(new Font("Arial",Font.PLAIN,12));
+//        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+//        b.addMouseListener(new MouseAdapter() {
+//            public void mouseEntered(MouseEvent e) { b.setForeground(new Color(251,191,36)); }
+//            public void mouseExited(MouseEvent e) { b.setForeground(Color.WHITE); }
+//        });
+//    }
+//
+//
+////    public static class RecipeData {
+////        public String title;
+////        public String description;
+////        public String imageUrl;
+////        public List<String> ingredients;
+////        public String cookTime;
+////    }
+//
+//    // WrapLayout for responsive wrapping
+//    static class WrapLayout extends FlowLayout {
+//        public WrapLayout(int align,int hgap,int vgap){super(align,hgap,vgap);}        
+//        public Dimension preferredLayoutSize(Container target){return layoutSize(target,true);}        
+//        public Dimension minimumLayoutSize(Container target){Dimension m=layoutSize(target,false);m.width-=(getHgap()+1);return m;}        
+//        private Dimension layoutSize(Container target,boolean pref){synchronized(target.getTreeLock()){int width=target.getWidth();if(width==0)width=Integer.MAX_VALUE;Insets ins=target.getInsets();int maxW=width-(ins.left+ins.right+getHgap()*2);int x=0,y=ins.top+getVgap(),rowH=0;for(Component m:target.getComponents()){if(!m.isVisible())continue;Dimension d=pref?m.getPreferredSize():m.getMinimumSize();if(x>0&&x+d.width>maxW){x=0;y+=getVgap()+rowH;rowH=0;}x+=d.width+getHgap();rowH=Math.max(rowH,d.height);}y+=rowH+ins.bottom;return new Dimension(width,y);}}    }
+//}
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 package app.ui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.io.IOException;
+import java.awt.event.*;
 import java.net.URL;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
+import java.sql.SQLException;
 
 public class RecipeLandingPage extends JFrame {
-
     private static final long serialVersionUID = 1L;
+
+    private String currentUserName = null;
     private JPanel contentPane;
     private JPanel cardsPanel;
+    private JTextField searchField;
+    private JButton loginButton, signUpButton;
+    private static final int CARD_WIDTH = 270;
+    private static final int CARD_GAP = 15;
 
-    private static final int CARD_MIN_WIDTH = 220;
-    private static final int CARD_HORIZONTAL_GAP = 15;
-
-    // --- Inner class to simulate Recipe data ---
-    private static class RecipeData {
-        String title;
-        String description;
-        String imageUrl;
-        List<String> ingredients;
-        String cookTime;
-
-        public RecipeData(String title, String description, String imageUrl, List<String> ingredients, String cookTime) {
-            this.title = title;
-            this.description = description;
-            this.imageUrl = imageUrl;
-            this.ingredients = ingredients;
-            this.cookTime = cookTime;
-        }
-    }
-
-    /**
-     * Launch the application.
-     */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    RecipeLandingPage frame = new RecipeLandingPage();
-                    frame.setVisible(true);
-                    SwingUtilities.invokeLater(() -> {
-                        frame.adjustCardLayout();
-                        frame.loadAndDisplayRecipes();
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+        SwingUtilities.invokeLater(() -> {
+            RecipeLandingPage frame = new RecipeLandingPage();
+            frame.setVisible(true);
+            frame.adjustCardLayout();
+            frame.loadAndDisplayRecipes();
         });
     }
 
-    /**
-     * Create the frame.
-     */
     public RecipeLandingPage() {
         setTitle("Recipe Management System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 800);
-        //setResizable(false);
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        setPreferredSize(new Dimension((int)(screen.width*0.9), (int)(screen.height*0.85)));
+        setMinimumSize(new Dimension(1000, 650));
         setLocationRelativeTo(null);
+        setResizable(true);
 
-        contentPane = new JPanel();
+        contentPane = new JPanel(new BorderLayout());
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        contentPane.setLayout(new BorderLayout(0, 0));
         setContentPane(contentPane);
 
-        // --- 1. Navigation Bar Panel ---
-        JPanel navBarPanel = new JPanel();
-        navBarPanel.setBackground(new Color(255, 255, 255));
-        navBarPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
-        navBarPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10));
-        contentPane.add(navBarPanel, BorderLayout.NORTH);
+        contentPane.add(buildNavBar(), BorderLayout.NORTH);
+        contentPane.add(buildMainScroll(), BorderLayout.CENTER);
+        contentPane.add(buildFooter(), BorderLayout.SOUTH);
 
-        JLabel logoLabel = new JLabel("Recipe Manager");
-        logoLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        logoLabel.setForeground(new Color(234, 88, 12));
-        navBarPanel.add(logoLabel);
+        pack();
+    }
 
-        JTextField searchField = new JTextField(30);
+    private JPanel buildNavBar() {
+        JPanel navBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
+        navBar.setBackground(Color.WHITE);
+        navBar.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
+
+        JLabel logo = new JLabel("RecipeHub");
+        logo.setFont(new Font("Arial", Font.BOLD, 24));
+        logo.setForeground(new Color(234, 88, 12));
+        navBar.add(logo);
+
+        JLabel searchIcon = new JLabel("\uD83D\uDD0D");
+        searchIcon.setFont(new Font("Arial", Font.PLAIN, 18));
+        navBar.add(searchIcon);
+
+        searchField = new JTextField("Search for recipes...", 30);
         searchField.setFont(new Font("Arial", Font.PLAIN, 14));
-        searchField.setText("Search for recipes...");
         searchField.setForeground(Color.GRAY);
-        searchField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
+        searchField.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent e) {
                 if (searchField.getText().equals("Search for recipes...")) {
                     searchField.setText("");
                     searchField.setForeground(Color.BLACK);
                 }
             }
-            public void focusLost(java.awt.event.FocusEvent evt) {
+            public void focusLost(FocusEvent e) {
                 if (searchField.getText().isEmpty()) {
                     searchField.setText("Search for recipes...");
                     searchField.setForeground(Color.GRAY);
                 }
             }
         });
-        navBarPanel.add(searchField);
+        searchField.addActionListener(e -> performSearch());
+        navBar.add(searchField);
 
-        JButton loginButton = new JButton("Login");
-        styleButton(loginButton, new Color(255, 255, 255), new Color(234, 88, 12));
-        navBarPanel.add(loginButton);
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                LoginPage loginPage = new LoginPage();
-                loginPage.setVisible(true);
-                RecipeLandingPage.this.setVisible(false);
+        JButton searchBtn = new JButton("Search");
+        styleButton(searchBtn, new Color(234, 88, 12), Color.WHITE);
+        searchBtn.addActionListener(e -> performSearch());
+        navBar.add(searchBtn);
 
-                loginPage.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                        RecipeLandingPage.this.setVisible(true);
-                    }
-                });
-            }
-        });
+        loginButton = new JButton("Login");
+        styleButton(loginButton, Color.WHITE, new Color(234, 88, 12));
+        loginButton.addActionListener(e -> openLogin());
 
-        JButton signUpButton = new JButton("Sign Up");
+        signUpButton = new JButton("Sign Up");
         styleButton(signUpButton, new Color(234, 88, 12), Color.WHITE);
-        navBarPanel.add(signUpButton);
-        signUpButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                LoginPage loginPage = new LoginPage();
-                loginPage.setVisible(true);
-                loginPage.showSignUpPanel();
-                RecipeLandingPage.this.setVisible(false);
+        signUpButton.addActionListener(e -> openLogin());
 
-                loginPage.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                        RecipeLandingPage.this.setVisible(true);
-                    }
-                });
-            }
+        if (currentUserName == null) {
+            navBar.add(loginButton);
+            navBar.add(signUpButton);
+        } else {
+            JButton userBtn = new JButton(currentUserName + " \u25BE");
+            styleButton(userBtn, Color.WHITE, new Color(234, 88, 12));
+            JPopupMenu menu = new JPopupMenu();
+            JMenuItem logout = new JMenuItem("Log Out");
+            logout.addActionListener(ev -> {
+                currentUserName = null;
+                rebuildNavBar();
+            });
+            menu.add(logout);
+            userBtn.addActionListener(ev -> menu.show(userBtn, 0, userBtn.getHeight()));
+            navBar.add(userBtn);
+        }
+
+        return navBar;
+    }
+
+    private void rebuildNavBar() {
+        contentPane.remove(((BorderLayout)contentPane.getLayout()).getLayoutComponent(BorderLayout.NORTH));
+        contentPane.add(buildNavBar(), BorderLayout.NORTH);
+        contentPane.revalidate();
+        contentPane.repaint();
+    }
+
+    private void openLogin() {
+        LoginPage lp = new LoginPage(name -> {
+            currentUserName = name;
+            rebuildNavBar();
         });
+        lp.setVisible(true);
+    }
 
-        // --- 2. Main Content Scroll Pane ---
-        JScrollPane scrollPane = new JScrollPane();
-        contentPane.add(scrollPane, BorderLayout.CENTER);
+    private void performSearch() {
+        String keyword = searchField.getText().trim();
+        if (keyword.isEmpty() || keyword.equals("Search for recipes...")) {
+            JOptionPane.showMessageDialog(this, "Please enter a keyword to search.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        new SearchResultsPage(keyword, currentUserName).setVisible(true);
+    }
 
-        JPanel mainContentPanel = new JPanel();
-        mainContentPanel.setLayout(new BoxLayout(mainContentPanel, BoxLayout.Y_AXIS));
-        mainContentPanel.setBackground(new Color(248, 250, 252));
-        scrollPane.setViewportView(mainContentPanel);
+    private JScrollPane buildMainScroll() {
+        JScrollPane scroll = new JScrollPane();
+        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.getVerticalScrollBar().setUnitIncrement(16);
 
-        // --- Hero Section ---
-        JPanel heroPanel = new JPanel();
-        heroPanel.setBackground(new Color(255, 237, 213));
-        heroPanel.setBorder(new EmptyBorder(30, 20, 30, 20));
-        heroPanel.setLayout(new BorderLayout(0, 15));
-        heroPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainContentPanel.add(heroPanel);
-        mainContentPanel.add(Box.createVerticalStrut(20));
+        JPanel main = new JPanel();
+        main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
+        main.setBackground(new Color(248, 250, 252));
+        scroll.setViewportView(main);
+
+        JPanel hero = new JPanel(new BorderLayout(0, 15));
+        hero.setBackground(new Color(255, 237, 213));
+        hero.setBorder(new EmptyBorder(30, 20, 30, 20));
+        main.add(hero);
+        main.add(Box.createVerticalStrut(20));
 
         JLabel heroTitle = new JLabel("Discover Delicious Recipes", SwingConstants.CENTER);
         heroTitle.setFont(new Font("Arial", Font.BOLD, 36));
         heroTitle.setForeground(new Color(153, 27, 27));
-        heroPanel.add(heroTitle, BorderLayout.NORTH);
+        hero.add(heroTitle, BorderLayout.NORTH);
 
-        JTextArea heroDescription = new JTextArea("Discover, manage, and preserve authentic Nepali recipes!");
-        heroDescription.setFont(new Font("Arial", Font.PLAIN, 16));
-        heroDescription.setForeground(new Color(51, 51, 51));
-        heroDescription.setWrapStyleWord(true);
-        heroDescription.setLineWrap(true);
-        heroDescription.setEditable(false);
-        heroDescription.setBackground(null);
-        heroDescription.setBorder(null);
-        heroPanel.add(heroDescription, BorderLayout.CENTER);
+        JTextArea heroDesc = new JTextArea("Discover, manage, and preserve authentic Nepali recipes!");
+        heroDesc.setFont(new Font("Arial", Font.PLAIN, 16));
+        heroDesc.setWrapStyleWord(true);
+        heroDesc.setLineWrap(true);
+        heroDesc.setOpaque(false);
+        heroDesc.setEditable(false);
+        hero.add(heroDesc, BorderLayout.CENTER);
 
-        JButton browseButton = new JButton("Browse Recipes");
-        styleButton(browseButton, new Color(234, 88, 12), Color.WHITE);
-        browseButton.setFont(new Font("Arial", Font.BOLD, 18));
-        heroPanel.add(browseButton, BorderLayout.SOUTH);
+        JButton browse = new JButton("Browse Recipes");
+        styleButton(browse, new Color(234, 88, 12), Color.WHITE);
+        browse.setFont(new Font("Arial", Font.BOLD, 18));
+        hero.add(browse, BorderLayout.SOUTH);
 
-        // --- Recipe Cards Section ---
-        JLabel popularRecipesTitle = new JLabel("Traditional Nepalese Recipes", SwingConstants.CENTER);
-        popularRecipesTitle.setFont(new Font("Arial", Font.BOLD, 28));
-        popularRecipesTitle.setForeground(new Color(51, 51, 51));
-        popularRecipesTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainContentPanel.add(popularRecipesTitle);
-        mainContentPanel.add(Box.createVerticalStrut(20));
+        JLabel title = new JLabel("Traditional Nepalese Recipes", SwingConstants.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 28));
+        title.setForeground(new Color(51, 51, 51));
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        main.add(title);
+        main.add(Box.createVerticalStrut(20));
 
-        cardsPanel = new JPanel();
-        cardsPanel.setLayout(new GridLayout(0, 1, CARD_HORIZONTAL_GAP, 15));
+        JPanel cardsWrapper = new JPanel();
+        cardsWrapper.setLayout(new BoxLayout(cardsWrapper, BoxLayout.X_AXIS));
+        cardsWrapper.setBackground(new Color(248, 250, 252));
+        main.add(cardsWrapper);
+        cardsWrapper.add(Box.createHorizontalGlue());
+
+        cardsPanel = new JPanel(new GridLayout(0, 1, CARD_GAP, CARD_GAP));
         cardsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         cardsPanel.setBackground(new Color(248, 250, 252));
-        cardsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainContentPanel.add(cardsPanel);
-        mainContentPanel.add(Box.createVerticalStrut(30));
+        cardsPanel.setMaximumSize(new Dimension(1000, Integer.MAX_VALUE));
+        cardsWrapper.add(cardsPanel);
+        cardsWrapper.add(Box.createHorizontalGlue());
+        main.add(Box.createVerticalStrut(30));
 
-        mainContentPanel.addComponentListener(new ComponentAdapter() {
-            @Override
+        main.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 adjustCardLayout();
             }
         });
 
-        // --- Add New Recipe Section ---
-        JPanel addRecipePanel = new JPanel();
-        addRecipePanel.setBackground(new Color(255, 247, 237));
-        addRecipePanel.setBorder(new EmptyBorder(30, 20, 30, 20));
-        addRecipePanel.setLayout(new BoxLayout(addRecipePanel, BoxLayout.Y_AXIS));
-        addRecipePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainContentPanel.add(addRecipePanel);
-        mainContentPanel.add(Box.createVerticalStrut(20));
+        JPanel addPanel = new JPanel();
+        addPanel.setLayout(new BoxLayout(addPanel, BoxLayout.Y_AXIS));
+        addPanel.setBackground(new Color(255, 247, 237));
+        addPanel.setBorder(new EmptyBorder(30, 20, 30, 20));
+        main.add(addPanel);
+        main.add(Box.createVerticalStrut(20));
 
-        JLabel addRecipeTitle = new JLabel("Didn't find what you were looking for?", SwingConstants.CENTER);
-        addRecipeTitle.setFont(new Font("Arial", Font.BOLD, 28));
-        addRecipeTitle.setForeground(new Color(51, 51, 51));
-        addRecipeTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        addRecipePanel.add(addRecipeTitle);
-        addRecipePanel.add(Box.createVerticalStrut(10));
+        JLabel addTitle = new JLabel("Didn't find what you were looking for?", SwingConstants.CENTER);
+        addTitle.setFont(new Font("Arial", Font.BOLD, 28));
+        addTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        addPanel.add(addTitle);
+        addPanel.add(Box.createVerticalStrut(10));
 
-        JTextArea addRecipeDescription = new JTextArea("Help us grow our collection by adding your own unique recipes!");
-        addRecipeDescription.setFont(new Font("Arial", Font.PLAIN, 16));
-        addRecipeDescription.setForeground(new Color(51, 51, 51));
-        addRecipeDescription.setWrapStyleWord(true);
-        addRecipeDescription.setLineWrap(true);
-        addRecipeDescription.setEditable(false);
-        addRecipeDescription.setBackground(null);
-        addRecipeDescription.setBorder(null);
-        addRecipeDescription.setAlignmentX(Component.CENTER_ALIGNMENT);
-        addRecipePanel.add(addRecipeDescription);
-        addRecipePanel.add(Box.createVerticalStrut(20));
+        JTextArea addDesc = new JTextArea("Help us grow our collection by adding your own unique recipes!");
+        addDesc.setFont(new Font("Arial", Font.PLAIN, 16));
+        addDesc.setWrapStyleWord(true);
+        addDesc.setLineWrap(true);
+        addDesc.setOpaque(false);
+        addDesc.setEditable(false);
+        addDesc.setBorder(null);
+        addDesc.setAlignmentX(Component.CENTER_ALIGNMENT);
+        addDesc.setMaximumSize(new Dimension(800, 40));
+        addPanel.add(addDesc);
+        addPanel.add(Box.createVerticalStrut(20));
 
-        JButton addNewRecipeButton = new JButton("Add New Recipe");
-        styleButton(addNewRecipeButton, new Color(234, 88, 12), Color.BLACK);
-        addNewRecipeButton.setFont(new Font("Arial", Font.BOLD, 20));
-        addNewRecipeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        addRecipePanel.add(addNewRecipeButton);
-
-        addNewRecipeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(RecipeLandingPage.this, "Opening new recipe submission form!", "Add Recipe", JOptionPane.INFORMATION_MESSAGE);
+        JButton addBtn = new JButton("Add New Recipe");
+        styleButton(addBtn, new Color(234, 88, 12), Color.BLACK);
+        addBtn.setFont(new Font("Arial", Font.BOLD, 20));
+        addBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        addBtn.addActionListener(e -> {
+            if (currentUserName != null) {
+                new AddRecipePage().setVisible(true);
+            } else {
+                LoginPage lp = new LoginPage(fullName -> {
+                    setCurrentUserName(fullName);
+                    SwingUtilities.invokeLater(() -> this.setVisible(true));
+                });
+                lp.setVisible(true);
+                this.setVisible(false);
             }
         });
+        addPanel.add(addBtn);
 
-        // --- Footer Panel ---
-        JPanel footerPanel = new JPanel();
-        footerPanel.setBackground(new Color(51, 51, 51));
-        footerPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        contentPane.add(footerPanel, BorderLayout.SOUTH);
-
-        JLabel copyrightLabel = new JLabel("© 2024 RecipeHub. All rights reserved.");
-        copyrightLabel.setForeground(Color.WHITE);
-        copyrightLabel.setFont(new Font("Arial", Font.PLAIN, 12));
-        footerPanel.add(copyrightLabel);
-
-        JButton privacyPolicy = new JButton("Privacy Policy");
-        styleLinkButton(privacyPolicy);
-        footerPanel.add(privacyPolicy);
-
-        JButton termsOfService = new JButton("Terms of Service");
-        styleLinkButton(termsOfService);
-        footerPanel.add(termsOfService);
-
-        JButton contactUs = new JButton("Contact Us");
-        styleLinkButton(contactUs);
-        footerPanel.add(contactUs);
+        return scroll;
     }
 
-    /**
-     * Helper method to simulate fetching recipe data.
-     * For now, this replaces database fetching with hardcoded data.
-     */
-    private List<RecipeData> fetchRecipes() {
-        List<RecipeData> recipes = new ArrayList<>();
-        // Simulate a short delay
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+    private JPanel buildFooter() {
+        JPanel footer = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        footer.setBackground(new Color(51, 51, 51));
+
+        JLabel copy = new JLabel("© 2024 RecipeHub. All rights reserved.");
+        copy.setForeground(Color.WHITE);
+        copy.setFont(new Font("Arial", Font.PLAIN, 12));
+        footer.add(copy);
+
+        for (String text : Arrays.asList("Privacy Policy", "Terms of Service", "Contact Us")) {
+            JButton link = new JButton(text);
+            styleLinkButton(link);
+            footer.add(link);
         }
-
-        // Hardcoded Traditional Nepalese Recipes
-        recipes.add(new RecipeData("Dal, Bhat, Tarkari", "A classic dish that represents the soul-warming essence of Nepali comfort food. It's a staple meal consisting of lentil soup (dal), steamed rice (bhat), and vegetable curry (tarkari), often served with pickles (achar) and sometimes meat.", "https://placehold.co/400x250/FDBA74/FFFFFF?text=Dal+Bhat+Tarkari",
-            Arrays.asList("1 cup lentils", "2 cups rice", "Mixed vegetables (potatoes, cauliflower, beans)", "Spices (turmeric, cumin, coriander)", "Ghee", "Onion", "Garlic", "Ginger"), "45 minutes"));
-        recipes.add(new RecipeData("Chukauni", "It is made from boiled potatoes, yogurt, onion, coriander and spices. A popular side dish from Palpa, it's creamy, tangy, and a delightful accompaniment to main meals or as a snack.", "https://placehold.co/400x250/A78BFA/FFFFFF?text=Chukauni",
-            Arrays.asList("4-5 boiled potatoes", "1 cup plain yogurt", "1 onion (finely chopped)", "1 green chili (finely chopped)", "Coriander leaves", "Mustard oil", "Fenugreek seeds", "Turmeric powder", "Salt"), "20 minutes"));
-        recipes.add(new RecipeData("Sel Roti", "Made from a batter of rice flour, water, sugar, ghee, and spices which is then deep-fried in cooking oil to form a beautiful ring-shaped bread. It's a traditional homemade, ring-shaped rice bread, often prepared during festivals.", "https://placehold.co/400x250/6EE7B7/FFFFFF?text=Sel+Roti",
-            Arrays.asList("2 cups rice flour", "1/2 cup sugar", "1/4 cup ghee (clarified butter)", "1/2 tsp cardamom powder", "Water (as needed)", "Cooking oil for frying"), "30 minutes"));
-        recipes.add(new RecipeData("Jaggery Khajuri", "A traditional sweet that has been in the market for over a century. It is generally made of flour and sugar and fried in ghee, resulting in a crispy and sweet pastry, perfect with tea.", "https://placehold.co/400x250/FBBF24/FFFFFF?text=Jaggery+Khajuri",
-            Arrays.asList("2 cups all-purpose flour", "1/2 cup jaggery (gud)", "1/4 cup ghee", "Water", "Fennel seeds", "Cooking oil for frying"), "40 minutes"));
-        recipes.add(new RecipeData("Gundruk, Bhatmas Sadeko", "Gundruk is a traditional Nepali dish made out of fermented leafy vegetables, often served as a side dish. Bhatmas Sadeko is a spicy soybean salad. When combined, they offer a unique tangy and savory flavor.", "https://placehold.co/400x250/C4B5FD/FFFFFF?text=Gundruk+Bhatmas",
-            Arrays.asList("1 cup dried gundruk", "1/2 cup roasted soybeans (bhatmas)", "Onion", "Garlic", "Ginger", "Green chilies", "Tomatoes", "Mustard oil", "Coriander leaves", "Salt", "Spices"), "35 minutes"));
-        recipes.add(new RecipeData("Rildok Soup (Nepali Soup)", "A Sherpa dish made from potatoes mashed to a pulp by beating or pounding it. This hearty soup is often consumed during cold weather, providing warmth and energy.", "https://placehold.co/400x250/FECACA/FFFFFF?text=Rildok+Soup",
-            Arrays.asList("4-5 large potatoes", "2-3 garlic cloves", "1 inch ginger", "Green chilies", "Coriander leaves", "Butter/Ghee", "Salt to taste"), "30 minutes"));
-        recipes.add(new RecipeData("Chatamari (Rice Pancake)", "A savory rice pancake, often topped with meat, eggs, or vegetables. Sometimes referred to as 'Nepali Pizza,' it's a traditional dish of the Newar community.", "https://placehold.co/400x250/BFDBFE/FFFFFF?text=Chatamari",
-            Arrays.asList("1 cup rice flour", "Water", "Salt", "Minced meat (optional)", "Egg (optional)", "Onion", "Coriander", "Spices"), "25 minutes"));
-        recipes.add(new RecipeData("Yomari (Steamed Dumpling)", "A steamed dumpling made from rice flour and flour and filled with a sweet filling, typically \"chhaku\" (a sweet paste made from jaggery) or a savory lentil paste. It's a special delicacy of the Newar community, especially during the Yomari Punhi festival.", "https://placehold.co/400x250/CFFAFE/FFFFFF?text=Yomari",
-            Arrays.asList("1 cup rice flour", "Jaggery (gud)", "Sesame seeds", "Coconut (grated)", "Ghee", "Water"), "40 minutes"));
-
-        return recipes;
+        return footer;
     }
 
-    /**
-     * Loads recipes asynchronously and displays them.
-     */
+    private void adjustCardLayout() {
+        int w = cardsPanel.getWidth();
+        if (w <= 0) return;
+        int cols = Math.max(1, w / CARD_WIDTH);
+        GridLayout g = (GridLayout) cardsPanel.getLayout();
+        if (g.getColumns() != cols) {
+            g.setColumns(cols);
+            cardsPanel.revalidate();
+        }
+    }
+
     private void loadAndDisplayRecipes() {
         cardsPanel.removeAll();
-        cardsPanel.revalidate();
-        cardsPanel.repaint();
+        JLabel loading = new JLabel("Loading recipes...", SwingConstants.CENTER);
+        loading.setFont(new Font("Arial", Font.ITALIC, 16));
+        loading.setForeground(Color.GRAY);
+        cardsPanel.add(loading);
 
-        JLabel loadingLabel = new JLabel("Loading recipes...", SwingConstants.CENTER);
-        loadingLabel.setFont(new Font("Arial", Font.ITALIC, 16));
-        loadingLabel.setForeground(Color.GRAY);
-        loadingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        cardsPanel.add(loadingLabel);
-
-        SwingWorker<List<RecipeData>, Void> worker = new SwingWorker<List<RecipeData>, Void>() {
-            @Override
+        new SwingWorker<List<RecipeData>, Void>() {
             protected List<RecipeData> doInBackground() throws Exception {
+                Thread.sleep(500);
                 return fetchRecipes();
             }
 
-            @Override
             protected void done() {
                 try {
-                    List<RecipeData> recipes = get();
                     cardsPanel.removeAll();
-                    for (RecipeData recipe : recipes) {
-                        addRecipeCard(cardsPanel, recipe);
-                    }
-                } catch (Exception e) {
-                    System.err.println("Error displaying recipes: " + e.getMessage());
-                    e.printStackTrace();
-                    cardsPanel.removeAll();
-                    JLabel errorLabel = new JLabel("Failed to load recipes.", SwingConstants.CENTER);
-                    errorLabel.setForeground(Color.RED);
-                    cardsPanel.add(errorLabel);
-                } finally {
+                    for (RecipeData r : get()) addRecipeCard(r);
                     adjustCardLayout();
+                } catch (Exception e) {
+                    cardsPanel.removeAll();
+                    cardsPanel.add(new JLabel("Failed to load recipes.", SwingConstants.CENTER));
                 }
             }
-        };
-        worker.execute();
+        }.execute();
     }
 
-    /**
-     * Helper method to adjust the number of columns in the recipe cards grid
-     * based on the available panel width.
-     */
-    private void adjustCardLayout() {
-        if (cardsPanel == null) {
-            return;
-        }
-        
-        int availableWidth = cardsPanel.getWidth();
-        if (availableWidth <= 0) {
-            return;
-        }
-
-        int idealColumns = availableWidth / (CARD_MIN_WIDTH + CARD_HORIZONTAL_GAP);
-        int newColumns = Math.max(1, idealColumns);
-
-        GridLayout layout = (GridLayout) cardsPanel.getLayout();
-        if (layout.getColumns() != newColumns) {
-            layout.setColumns(newColumns);
-            cardsPanel.revalidate();
-            cardsPanel.repaint();
+    private List<RecipeData> fetchRecipes() {
+        try {
+            return RecipeDAO.getTopRecipes(6);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 
-    /**
-     * Helper method to style buttons for a modern look.
-     */
-    private void styleButton(JButton button, Color bgColor, Color fgColor) {
-        button.setBackground(bgColor);
-        button.setForeground(fgColor);
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        if (bgColor.equals(Color.WHITE)) {
-            button.setBorder(BorderFactory.createLineBorder(new Color(234, 88, 12), 1));
+    private void addRecipeCard(RecipeData r) {
+        JPanel card = new JPanel(new BorderLayout());
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+            new EmptyBorder(5, 5, 5, 5)
+        ));
+        card.setPreferredSize(new Dimension(250, 320));
+
+        try {
+            ImageIcon raw = new ImageIcon(new URL(r.imageUrl));
+            Image scaled = raw.getImage().getScaledInstance(240, 240, Image.SCALE_SMOOTH);
+            card.add(new JLabel(new ImageIcon(scaled)), BorderLayout.NORTH);
+        } catch (Exception ex) {
+            JLabel img = new JLabel("Image", SwingConstants.CENTER);
+            img.setPreferredSize(new Dimension(240, 240));
+            card.add(img, BorderLayout.NORTH);
         }
+
+        JPanel info = new JPanel();
+        info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+        info.setBackground(Color.WHITE);
+        info.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+        JLabel t = new JLabel(r.title);
+        t.setFont(new Font("Arial", Font.BOLD, 14));
+        info.add(t);
+
+        JTextArea d = new JTextArea(r.description);
+        d.setFont(new Font("Arial", Font.PLAIN, 12));
+        d.setWrapStyleWord(true);
+        d.setLineWrap(true);
+        d.setEditable(false);
+        d.setOpaque(false);
+        info.add(d);
+
+        JButton more = new JButton("Read More →");
+        more.setFont(new Font("Arial", Font.PLAIN, 12));
+        more.setForeground(new Color(234, 88, 12));
+        more.setContentAreaFilled(false);
+        more.setBorderPainted(false);
+        more.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        more.setAlignmentX(Component.LEFT_ALIGNMENT);
+        more.addActionListener(e -> new RecipeDescriptionPage(
+            r.title,
+            r.description,
+            r.imageUrl,
+            r.ingredients != null ? r.ingredients : List.of("N/A"),
+            r.cookTime != null ? r.cookTime : "Unknown"
+        ).setVisible(true));
+
+        info.add(Box.createVerticalStrut(5));
+        info.add(more);
+
+        card.add(info, BorderLayout.CENTER);
+        cardsPanel.add(card);
     }
 
-    /**
-     * Helper method to style buttons that act as links.
-     */
-    private void styleLinkButton(JButton button) {
-        button.setBackground(null);
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-        button.setFont(new Font("Arial", Font.PLAIN, 12));
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setForeground(new Color(251, 191, 36));
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setForeground(Color.WHITE);
-            }
+    private void styleButton(JButton b, Color bg, Color fg) {
+        b.setBackground(bg);
+        b.setForeground(fg);
+        b.setFocusPainted(false);
+        b.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        b.setFont(new Font("Arial", Font.BOLD, 14));
+        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+
+    private void styleLinkButton(JButton b) {
+        b.setBackground(null);
+        b.setForeground(Color.WHITE);
+        b.setFocusPainted(false);
+        b.setBorderPainted(false);
+        b.setContentAreaFilled(false);
+        b.setFont(new Font("Arial", Font.PLAIN, 12));
+        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        b.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) { b.setForeground(new Color(251, 191, 36)); }
+            public void mouseExited(MouseEvent e) { b.setForeground(Color.WHITE); }
         });
     }
 
-    /**
-     * Helper method to create and add a recipe card to a panel.
-     * Now accepts a RecipeData object.
-     */
-    private void addRecipeCard(JPanel parentPanel, RecipeData recipe) {
-        JPanel cardPanel = new JPanel();
-        cardPanel.setLayout(new BorderLayout(0, 5));
-        cardPanel.setBackground(Color.WHITE);
-        cardPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
-        cardPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        // Image label
-        JLabel imageLabel = new JLabel();
-        imageLabel.setPreferredSize(new Dimension(200, 150));
-        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        imageLabel.setVerticalAlignment(SwingConstants.CENTER);
-
-        // Load image from URL in a separate thread to avoid freezing GUI
-        new Thread(() -> {
-            try {
-                URL url = new URI(recipe.imageUrl).toURL();
-                ImageIcon imageIcon = new ImageIcon(url);
-                Image image = imageIcon.getImage();
-                Image newimg = image.getScaledInstance(200, 150,  java.awt.Image.SCALE_SMOOTH);
-//                imageIcon = new ImageIcon(newimg);
-//                SwingUtilities.invokeLater(() -> imageLabel.setIcon(imageIcon));
-            } catch (IOException e) {
-                System.err.println("Error loading image (IO): " + recipe.imageUrl + " - " + e.getMessage());
-                SwingUtilities.invokeLater(() -> {
-                    imageLabel.setText("No Image");
-                    imageLabel.setForeground(Color.GRAY);
-                    imageLabel.setFont(new Font("Arial", Font.ITALIC, 12));
-                });
-            } catch (URISyntaxException e) {
-                System.err.println("Error loading image (URI Syntax): " + recipe.imageUrl + " - " + e.getMessage());
-                SwingUtilities.invokeLater(() -> {
-                    imageLabel.setText("Invalid Image URL");
-                    imageLabel.setForeground(Color.RED);
-                    imageLabel.setFont(new Font("Arial", Font.ITALIC, 10));
-                });
-            }
-        }).start();
-
-        cardPanel.add(imageLabel, BorderLayout.NORTH);
-
-        // Text content panel for title and description
-        JPanel textContentPanel = new JPanel();
-        textContentPanel.setLayout(new BoxLayout(textContentPanel, BoxLayout.Y_AXIS));
-        textContentPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        textContentPanel.setBackground(Color.WHITE);
-        cardPanel.add(textContentPanel, BorderLayout.CENTER);
-
-        JLabel titleLabel = new JLabel(recipe.title);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        titleLabel.setForeground(new Color(51, 51, 51));
-        titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        textContentPanel.add(titleLabel);
-        textContentPanel.add(Box.createVerticalStrut(5));
-
-        JTextArea descriptionArea = new JTextArea(recipe.description);
-        descriptionArea.setFont(new Font("Arial", Font.PLAIN, 12));
-        descriptionArea.setForeground(new Color(102, 102, 102));
-        descriptionArea.setWrapStyleWord(true);
-        descriptionArea.setLineWrap(true);
-        descriptionArea.setEditable(false);
-        descriptionArea.setBackground(null);
-        descriptionArea.setBorder(null);
-        descriptionArea.setAlignmentX(Component.LEFT_ALIGNMENT);
-        descriptionArea.setPreferredSize(new Dimension(180, 50));
-        descriptionArea.setMinimumSize(new Dimension(180, 50));
-        descriptionArea.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-        textContentPanel.add(descriptionArea);
-        textContentPanel.add(Box.createVerticalStrut(5));
-
-        JButton readMoreButton = new JButton("Read More →");
-        readMoreButton.setFont(new Font("Arial", Font.PLAIN, 12));
-        readMoreButton.setForeground(new Color(234, 88, 12));
-        readMoreButton.setBackground(null);
-        readMoreButton.setBorderPainted(false);
-        readMoreButton.setContentAreaFilled(false);
-        readMoreButton.setFocusPainted(false);
-        readMoreButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        readMoreButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-        textContentPanel.add(readMoreButton);
-
-        readMoreButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Open the RecipeDescriptionPage with this recipe's data
-                RecipeDescriptionPage descriptionPage = new RecipeDescriptionPage(
-                    recipe.title,
-                    recipe.description,
-                    recipe.imageUrl,
-                    recipe.ingredients,
-                    recipe.cookTime
-                );
-                descriptionPage.setVisible(true);
-            }
-        });
-
-        parentPanel.add(cardPanel);
+    private void setCurrentUserName(String name) {
+        this.currentUserName = name;
+        rebuildNavBar();
     }
 }
-// Updated RecipeLandingPage.java with steps support and cleaner loading
-
-
