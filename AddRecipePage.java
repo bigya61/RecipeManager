@@ -407,6 +407,11 @@ public class AddRecipePage extends JFrame {
         String cookTimeText = getTextFromField(cookTimeField, "e.g., 45 minutes");
         String ingredientsText = getTextFromArea(ingredientsArea, "e.g.,\n1 cup flour\n2 eggs\n...");
         String processText = getTextFromArea(processArea, "1. First step...\n2. Next step...\n...");
+        List<String> instructionList = Arrays.stream(processText.split("\\n"))
+        	    .map(String::trim)
+        	    .filter(s -> !s.isEmpty())
+        	    .toList();
+
         String tagsText = getTextFromField(tagsField, "e.g., Nepali, spicy, comfort food");
         String imageUrl = getTextFromField(imageUrlField, "e.g., https://example.com/my-recipe-image.jpg");
 
@@ -440,7 +445,7 @@ public class AddRecipePage extends JFrame {
 
         // --- 4. CALL THE DAO to save to the database ---
         try {
-            recipeDAO.addRecipe(title, description, cookTimeMins, processText, ingredientsList, tagsText, imageUrl, currentUserId);
+            recipeDAO.addRecipe(title, description, cookTimeMins, instructionList, ingredientsList, tagsText, imageUrl, currentUserId);
 
             JOptionPane.showMessageDialog(this,
                 "Recipe '" + title + "' has been successfully submitted!\nThank you for your contribution!",
