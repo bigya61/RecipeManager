@@ -342,7 +342,7 @@ public class SearchResultsPage extends JFrame {
             if (results.isEmpty()) {
                 JLabel noMatch = new JLabel("No recipes found.");
                 noMatch.setFont(new Font("Segoe UI", Font.ITALIC, 18));
-                noMatch.setForeground(Color.DARK_GRAY);
+                noMatch.setForeground(Color.BLACK);
                 noMatch.setAlignmentX(Component.CENTER_ALIGNMENT);
                 resultsPanel.add(Box.createVerticalStrut(20));
                 resultsPanel.add(noMatch);
@@ -351,7 +351,7 @@ public class SearchResultsPage extends JFrame {
                 addRecipeBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
                 addRecipeBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
                 addRecipeBtn.setBackground(new Color(234, 88, 12));
-                addRecipeBtn.setForeground(Color.WHITE);
+                addRecipeBtn.setForeground(Color.BLACK);
                 addRecipeBtn.setFocusPainted(false);
                 addRecipeBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 

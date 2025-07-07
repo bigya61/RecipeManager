@@ -400,6 +400,7 @@ public class AddRecipePage extends JFrame {
      * Handles the submission of the recipe form by validating, parsing,
      * and sending the data to the database via the RecipeDAO.
      */
+    /*
     private void handleSubmit() {
         // --- 1. GATHER DATA from UI fields (and trim whitespace) ---
         String title = getTextFromField(titleField, "e.g., Spicy Chicken Curry");
@@ -456,6 +457,74 @@ public class AddRecipePage extends JFrame {
 
         } catch (SQLException ex) {
             ex.printStackTrace(); // Log the full error for debugging
+            JOptionPane.showMessageDialog(this,
+                "A database error occurred while submitting the recipe.\n\nError: " + ex.getMessage(),
+                "Database Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+        
+
+    }
+    */
+    private void handleSubmit() {
+        // --- 1. GATHER DATA ---
+        String title = getTextFromField(titleField, "e.g., Spicy Chicken Curry");
+        String description = getTextFromArea(descriptionArea, "A brief overview of your recipe...");
+        String cookTimeText = getTextFromField(cookTimeField, "e.g., 45 minutes");
+        String ingredientsText = getTextFromArea(ingredientsArea, "e.g.,\n1 cup flour\n2 eggs\n...");
+        String processText = getTextFromArea(processArea, "1. First step...\n2. Next step...\n...");
+        List<String> instructionList = Arrays.stream(processText.split("\\n"))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toList();
+        String tagsText = getTextFromField(tagsField, "e.g., Nepali, spicy, comfort food");
+        String imageUrl = getTextFromField(imageUrlField, "e.g., https://example.com/my-recipe-image.jpg");
+
+        // --- 2. VALIDATE ---
+        if (title.isEmpty() || description.isEmpty() || cookTimeText.isEmpty() || ingredientsText.isEmpty() || processText.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Please fill in all required fields:\nTitle, Description, Cook Time, Ingredients, and Process.",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // --- 3. PARSE COOK TIME ---
+        int cookTimeMins;
+        try {
+            Matcher matcher = Pattern.compile("\\d+").matcher(cookTimeText);
+            if (matcher.find()) {
+                cookTimeMins = Integer.parseInt(matcher.group(0));
+            } else {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this,
+                "Invalid Cook Time format. Please enter a number (e.g., '45 minutes').",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // --- 4. PREPARE INGREDIENTS ---
+        List<String> ingredientsList = Arrays.asList(ingredientsText.split("\\r?\\n"));
+
+        // --- 5. HARDCODED USER ID (for now) ---
+        int currentUserId = 1;
+
+        // --- 6. SAVE TO DATABASE ---
+        try {
+            recipeDAO.addRecipe(title, description, cookTimeMins, instructionList, ingredientsList, tagsText, imageUrl, currentUserId);
+
+            JOptionPane.showMessageDialog(this,
+                "Recipe '" + title + "' has been successfully submitted!\nThank you for your contribution!",
+                "Recipe Submission Success",
+                JOptionPane.INFORMATION_MESSAGE);
+
+            dispose(); // ✅ Only dispose once after success
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(this,
                 "A database error occurred while submitting the recipe.\n\nError: " + ex.getMessage(),
                 "Database Error",
