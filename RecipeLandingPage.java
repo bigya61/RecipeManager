@@ -224,18 +224,7 @@ public class RecipeLandingPage extends JFrame {
         styleButton(addBtn, new Color(234, 88, 12), Color.BLACK);
         addBtn.setFont(new Font("Arial", Font.BOLD, 20));
         addBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-       /* addBtn.addActionListener(e -> {
-            if (currentUserName != null) {
-                new AddRecipePage().setVisible(true);
-            } else {
-                LoginPage lp = new LoginPage(fullName -> {
-                    setCurrentUserName(fullName);
-                    SwingUtilities.invokeLater(() -> this.setVisible(true));
-                });
-                lp.setVisible(true);
-                this.setVisible(false);
-            }
-        });*/
+       
         addBtn.addActionListener(e -> {
             if (currentUserName != null) {
                 AddRecipePage addPage = new AddRecipePage();
@@ -339,9 +328,26 @@ public class RecipeLandingPage extends JFrame {
         ));
         card.setPreferredSize(new Dimension(260, 340));
         card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
+        /*
         try {
             ImageIcon raw = new ImageIcon(new URL(r.imageUrl));
+            Image scaled = raw.getImage().getScaledInstance(240, 180, Image.SCALE_SMOOTH);
+            JLabel imgLabel = new JLabel(new ImageIcon(scaled));
+            imgLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            card.add(imgLabel, BorderLayout.NORTH);
+        } catch (Exception ex) {
+            JLabel img = new JLabel("Image Not Available", SwingConstants.CENTER);
+            img.setPreferredSize(new Dimension(240, 180));
+            img.setForeground(Color.GRAY);
+            card.add(img, BorderLayout.NORTH);
+        }*/
+        try {
+            ImageIcon raw;
+            if (r.imageUrl.startsWith("http://") || r.imageUrl.startsWith("https://")) {
+                raw = new ImageIcon(new URL(r.imageUrl));
+            } else {
+                raw = new ImageIcon(r.imageUrl); // Load from local file
+            }
             Image scaled = raw.getImage().getScaledInstance(240, 180, Image.SCALE_SMOOTH);
             JLabel imgLabel = new JLabel(new ImageIcon(scaled));
             imgLabel.setHorizontalAlignment(SwingConstants.CENTER);
